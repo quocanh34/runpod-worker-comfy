@@ -1,16 +1,30 @@
 #!/usr/bin/env bash
 
-set -e
+set -e 
 
-SNAPSHOT_FILE=$(ls /*snapshot*.json 2>/dev/null | head -n 1)
+# Quit script if snapshot file doesn't exist
 
-if [ -z "$SNAPSHOT_FILE" ]; then
+if [ ! -f /snapshot.json ]; then
     echo "runpod-worker-comfy: No snapshot file found. Exiting..."
     exit 0
 fi
 
-echo "runpod-worker-comfy: restoring snapshot: $SNAPSHOT_FILE"
+cd /comfyui/
 
-comfy --workspace /comfyui node restore-snapshot "$SNAPSHOT_FILE" --pip-non-url
+# Install ComfyUI-Manager
+git clone https://github.com/ltdrdata/ComfyUI-Manager.git custom_nodes/ComfyUI-Manager
 
-echo "runpod-worker-comfy: restored snapshot file: $SNAPSHOT_FILE"
+cd custom_nodes/ComfyUI-Manager
+
+git checkout 22878f4ef848b93f908e2a938e27b09ec0630224
+
+pip install -r requirements.txt
+
+mkdir startup-scripts
+mv /snapshot.json startup-scripts/restore-snapshot.json
+
+cd ../..
+
+# Trigger restoring of the snapshot by performing a quick test run
+# Note: We need to use `yes` as some custom nodes may try to install dependencies with pip
+/usr/bin/yes | python3 main.py --cpu --quick-test-for-ci
