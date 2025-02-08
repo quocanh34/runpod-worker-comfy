@@ -13,14 +13,11 @@ cd /comfyui/
 
 # Install ComfyUI-Manager
 git clone https://github.com/ltdrdata/ComfyUI-Manager.git custom_nodes/ComfyUI-Manager
-
 cd custom_nodes/ComfyUI-Manager
-
 git checkout 22878f4ef848b93f908e2a938e27b09ec0630224
-
 pip install -r requirements.txt
 
-mkdir startup-scripts
+# Move snapshot file to startup-scripts
 mv /snapshot.json startup-scripts/restore-snapshot.json
 
 cd ../..
