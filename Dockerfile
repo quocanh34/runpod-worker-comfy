@@ -50,3 +50,32 @@ RUN /restore_snapshot.sh
 
 # Start container
 CMD ["/start.sh"]
+
+# Stage 2: Download models
+FROM base as downloader
+
+ARG HUGGINGFACE_ACCESS_TOKEN
+ARG MODEL_TYPE
+
+# Change working directory to ComfyUI
+WORKDIR /comfyui
+
+# Create necessary directories
+RUN mkdir -p models/checkpoints models/vae
+
+# Download checkpoints/vae/LoRA to include in image based on model type
+RUN if [ "$MODEL_TYPE" = "sdxl" ]; then \
+      wget -O models/checkpoints/sd_xl_base_1.0.safetensors https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors; \
+    elif [ "$MODEL_TYPE" = "ai-background" ]; then \
+      wget -O "models/checkpoints/coseditxl.safetensors" "https://civitai.com/api/download/models/642159?type=Model&format=SafeTensor&size=pruned&fp=fp16" && \
+      wget -O "models/upscale_models/RealESRGAN_x4plus.pth" "https://huggingface.co/lllyasviel/Annotators/resolve/main/RealESRGAN_x4plus.pth"; \
+    fi
+    
+# Stage 3: Final image
+FROM base as final
+
+# Copy models from stage 2 to the final image
+COPY --from=downloader /comfyui/models /comfyui/models
+
+# Start container
+CMD ["/start.sh"]
