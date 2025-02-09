@@ -68,7 +68,8 @@ RUN if [ "$MODEL_TYPE" = "sdxl" ]; then \
       wget -O models/checkpoints/sd_xl_base_1.0.safetensors https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors; \
     elif [ "$MODEL_TYPE" = "ai-background" ]; then \
       wget -O "models/checkpoints/coseditxl.safetensors" "https://civitai.com/api/download/models/642159?type=Model&format=SafeTensor&size=pruned&fp=fp16" && \
-      wget -O "models/upscale_models/RealESRGAN_x4plus.pth" "https://huggingface.co/lllyasviel/Annotators/resolve/main/RealESRGAN_x4plus.pth"; \
+      wget -O "models/upscale_models/RealESRGAN_x4plus.pth" "https://huggingface.co/lllyasviel/Annotators/resolve/main/RealESRGAN_x4plus.pth" && \
+      wget -O "custom_nodes/ComfyUI-BRIA_AI-RMBG/RMBG-1.4/model.pth" "https://huggingface.co/briaai/RMBG-1.4/resolve/main/model.pth"; \
     fi
     
 # Stage 3: Final image
