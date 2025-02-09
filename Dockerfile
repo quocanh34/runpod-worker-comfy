@@ -77,6 +77,7 @@ FROM base AS final
 
 # Copy models from stage 2 to the final image
 COPY --from=downloader /comfyui/models /comfyui/models
+COPY --from=downloader /comfyui/custom_nodes/ComfyUI-BRIA_AI-RMBG/RMBG-1.4 /comfyui/custom_nodes/ComfyUI-BRIA_AI-RMBG/RMBG-1.4
 
 # Start container
 CMD ["/start.sh"]
