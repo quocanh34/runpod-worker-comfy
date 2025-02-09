@@ -52,7 +52,7 @@ RUN /restore_snapshot.sh
 CMD ["/start.sh"]
 
 # Stage 2: Download models
-FROM base as downloader
+FROM base AS downloader
 
 ARG HUGGINGFACE_ACCESS_TOKEN
 ARG MODEL_TYPE
